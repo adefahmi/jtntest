@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\EncryptionController;
+use App\Http\Controllers\HandphoneController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -30,3 +31,5 @@ Route::post('encrypt', [EncryptionController::class, 'encrypt'])->name('encrypt'
 Route::post('decrypt', [EncryptionController::class, 'decrypt'])->name('decrypt');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('input', [HandphoneController::class, 'input'])->name('handphone.input');
