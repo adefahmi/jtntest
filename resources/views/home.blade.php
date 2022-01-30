@@ -18,6 +18,15 @@
 
                     <hr>
                     <a href="{{ route('endec') }}" class="btn btn-sm btn-success">Encrypt & Decrypt</a>
+                    <div class="card mt-5">
+                        <div class="card-header">
+                            <h5 class="text-center"><b>TECHNICAL TEST</b></h5>
+                        </div>
+                        <div class="card-body">
+                            <a href="{{ route('handphone.input') }}" target="_blank" class="btn btn-sm btn-info">Form Input</a>
+                            <a href="{{ route('handphone.output') }}" target="_blank" class="btn btn-sm btn-primary">Output</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

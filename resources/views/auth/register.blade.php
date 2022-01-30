@@ -67,8 +67,8 @@
                                     {{ __('Register') }}
                                 </button>
                                 <hr>
-                                <a href="/auth/facebook" class="btn btn-primary btn-block">
-                                    Register Dengan Facebook
+                                <a href="/auth/google" class="btn btn-primary btn-block">
+                                    Register Dengan Google
                                 </a>
                                 <a href="/auth/github" class="btn btn-dark btn-block">
                                     Register Dengan GitHub

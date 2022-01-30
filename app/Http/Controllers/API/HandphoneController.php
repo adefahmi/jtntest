@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Handphone;
+use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -127,6 +128,21 @@ class HandphoneController extends Controller
         return ResponseFormatter::success(
             null,
             'Data berhasil dihapus'
+        );
+    }
+
+    public function generate()
+    {
+        $no = '08' . rand(1, 9) . rand(1, 9) . rand(1000, 9999) . rand(1000, 9999);
+        $provider = Provider::inRandomOrder()->first();
+        $data = [
+            'nomor' => $no,
+            'provider_id' => $provider->id,
+            'provider' => $provider
+        ];
+        return ResponseFormatter::success(
+            $data,
+            'Data berhasil diambil'
         );
     }
 }

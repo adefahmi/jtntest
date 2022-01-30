@@ -30,14 +30,13 @@
                                 required
                                 data-placeholder="Pilih Provider.."
                                 form="form-handphone">
-                                <option></option>
 
                         </select>
                     </div>
                 </div>
                 <div class="card-footer ">
                     <button type="submit" class="btn btn-success" form="form-handphone">Save</button>
-                    <button type="submit" class="btn btn-primary" form="form-handphone">Auto</button>
+                    <button onclick="generate()" class="btn btn-primary">Auto</button>
                 </div>
             </div>
         </div>
@@ -82,13 +81,29 @@
                     }
                 });
             });
+     });
 
-        function clearForm()
+     function clearForm()
         {
             $('#input-provider_id').val('').trigger("change");
             $('#input-nomor').val('').trigger("change");
         }
-     });
+
+     function generate()
+        {
+            let url = '/api/generate';
+
+            fetch(url)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                clearForm();
+                $('#input-nomor').val(data.data.nomor).trigger("change");
+                var newOption = new Option(data.data.provider.nama, data.data.provider_id, false, true);
+                $('#input-provider_id').append(newOption).trigger("change");
+            })
+        }
 
 </script>
 @endsection

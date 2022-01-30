@@ -63,8 +63,8 @@
                                     </a>
                                 @endif
                                 <hr>
-                                <a href="/auth/facebook" class="btn btn-primary">
-                                    Login Dengan Facebook
+                                <a href="/auth/google" class="btn btn-primary">
+                                    Login Dengan Google
                                 </a>
 
                                 <a href="/auth/github" class="btn btn-dark">
