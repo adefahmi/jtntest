@@ -14,4 +14,9 @@ class Handphone extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class);
+    }
 }
