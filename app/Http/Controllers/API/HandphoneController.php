@@ -17,7 +17,7 @@ class HandphoneController extends Controller
      */
     public function index()
     {
-        $records = Handphone::all();
+        $records = Handphone::with('provider')->get();
 
         foreach ($records as $key => $value) {
             $no = (int) $value->nomor;
@@ -76,7 +76,7 @@ class HandphoneController extends Controller
     public function show(Handphone $handphone)
     {
         return ResponseFormatter::success(
-            $handphone,
+            $handphone->load('provider'),
             'Data berhasil diambil'
         );
     }

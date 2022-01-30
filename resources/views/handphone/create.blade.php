@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<p>Manajemen User</p>
      <div class="row justify-content-center align-items-center">
         <div class="card" style="width: 24rem;">
             <div class="card-header">
-                Data No Handphone Output
+                Data No Handphone
             </div>
             <div id="contentData">
                 <form method="post" id="form-handphone">

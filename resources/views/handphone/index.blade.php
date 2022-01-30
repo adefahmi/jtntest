@@ -1,116 +1,111 @@
-@extends('adminlte::page')
-
-@section('title', 'User')
-
-@section('content_header')
-<h1>Manajemen User</h1>
-@stop
+@extends('layouts.app')
 
 @section('content')
-<p>Manajemen User</p>
-<div class="row">
-    <div class="col-lg-12 margin-tb">
-        <div class="float-right my-2">
-            <a class="btn btn-success" href="{{ route('users.create') }}"> Create New User</a>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row justify-content-center align-items-center">
+               <div class="card">
+                   <div class="card-header">
+                       <h4 class="text-center"><b>GENAP</b></h4>
+                   </div>
+                   <table class="table table-bordered" id="handphone">
+                       <thead>
+                           <tr>
+                               <th>Nomor</th>
+                               <th>Provider</th>
+                               <th style="width: 150px">Action</th>
+                           </tr>
+                       </thead>
+                       <tbody id="hp-genap">
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row justify-content-center align-items-center">
+               <div class="card">
+                   <div class="card-header">
+                       <h4 class="text-center"><b>GANJIL</b></h4>
+                   </div>
+                   <table class="table table-bordered" id="handphone">
+                       <thead>
+                           <tr>
+                               <th>Nomor</th>
+                               <th>Provider</th>
+                               <th style="width: 150px">Action</th>
+                           </tr>
+                       </thead>
+                       <tbody id="hp-ganjil">
+                       </tbody>
+                   </table>
+               </div>
+           </div>
         </div>
     </div>
 </div>
+@endsection
 
-@if ($message = Session::get('success'))
-    <div class="alert alert-success">
-        <p>{{ $message }}</p>
-    </div>
-@endif
+@section('custom_head')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+@endsection
 
-<div class="row">
-    <div class="col">
-        <div class="card">
-            <div class="card-header"><b>Data User</b></div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered" id="datatable">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>NIK</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th width="280px">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($users as $index => $user)
-                            <tr>
-                                <td>{{ $index+1 }}</td>
-                                <td>{{ $user->nik }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ strtoupper($user->roles()->first()->name) }}</td>
-                                <td>
-                                    <form action="{{ route('users.destroy',$user->id) }}" method="POST">
-
-                                        <a class="btn btn-info" href="{{ route('users.show',$user->id) }}">Show</a>
-
-                                        <a class="btn btn-primary" href="{{ route('users.edit',$user->id) }}">Edit</a>
-
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button type="submit" class="btn btn-danger delete-confirm" data-name="{{ $user->name }}">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-@stop
-
-@section('css')
-<link rel="stylesheet" href="/css/admin_custom.css">
-@stop
 
 @section('js')
 <script>
+    let url = '/api/handphone';
+    var genap = [];
+    var ganjil = [];
 
-$(document).ready(function() {
-    $('#datatable').DataTable();
-} );
+    fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      genap = data.data.genap;
+      ganjil = data.data.ganjil;
 
-$('.delete-confirm').click(function(event) {
-      var form =  $(this).closest("form");
-      var name = $(this).data("name");
-      event.preventDefault();
-      Swal.fire({
-        title: 'Konfirmasi',
-        text: "Yakin menghapus "+name+" ?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#dd3333',
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
-      })
-      .then(function (result) {
-        if (result.value) {
-            form.submit();
-        } else {
-            // Swal.fire("Batal");
+      showData(genap, 'hp-genap');
+      showData(ganjil, 'hp-ganjil');
+    })
+
+function showData(data, tbl)
+{
+    if (data.length > 0) {
+        var temp = "";
+        data.forEach((itemData) => {
+                temp += "<tr>";
+                temp += "<td>" + itemData.nomor + "</td>";
+                temp += "<td>" + itemData.provider.nama + "</td>";
+                temp += "<td>" + `<a class="btn btn-warning btn-sm" href="/edit/` + itemData.id + `">Edit</a>
+                    <a href="javascript:void(0)" data-id="`+ itemData.id + `" class="btn btn-danger btn-sm" onclick="deleteData(event.target)">Delete</a>`
+                        + "</td></tr>";
+                });
+            document.getElementById(tbl).innerHTML = temp;
+    }
+}
+
+function deleteData(event) {
+    var id  = $(event).data("id");
+    let _url = `/api/handphone/${id}`;
+    let _token   = $('meta[name="csrf-token"]').attr('content');
+
+      $.ajax({
+        url: _url,
+        type: 'DELETE',
+        data: {
+          _token: _token
+        },
+        success: function(response) {
+            location.reload();
         }
-        });
-  });
+      });
+  }
+
+setTimeout(function(){
+   window.location.reload(1);
+}, 5000);
 
 </script>
-
 @endsection
-
-@section('footer', '2021')
-@section('plugins.Sweetalert2', true)
-
