@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Expr\AssignOp\Mod;
+use Illuminate\Support\Str;
 
 class LatlongController extends Controller
 {
@@ -24,24 +25,31 @@ class LatlongController extends Controller
             $path = '/mapbox.places/';
             $response = Http::get(config('latlong.mapbox.url').$path.$lat.','.$long.'.json', [
                 'access_token' => config('latlong.mapbox.token')
-            ])->collect();
+            ])->collect('features');
 
-            $features = $response['features'];
             $data = [
                 'lat' => $lat,
                 'long' => $long,
-                'kode_pos' => $features[0]['context'][1]['text'],
-                'desa' => $features[0]['context'][0]['text'],
-                'kecamatan' => $features[0]['context'][2]['text'],
-                'kota' => $features[0]['context'][3]['text'],
-                'provinsi' => $features[0]['context'][4]['text'],
-                'negara' => $features[0]['context'][5]['text'],
+                'kode_pos' => $this->getItemData($response, 'postcode'),
+                'desa' => $this->getItemData($response, 'neighborhood'),
+                'kecamatan' => $this->getItemData($response, 'locality'),
+                'kota' => $this->getItemData($response, 'place'),
+                'provinsi' => $this->getItemData($response, 'region'),
+                'negara' => $this->getItemData($response, 'country'),
             ];
 
         }
-        // return $data;
 
         return view('latlong::index', compact('data'));
+    }
+
+    public function getItemData($response, $str)
+    {
+        $data = $response->filter(function($item) use($str) {
+            return Str::of($item['id'])->contains($str);
+        });
+
+        return $data->first()['text'];
     }
 
 
