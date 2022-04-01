@@ -1,0 +1,13 @@
+{
+    "name": "Latlong",
+    "alias": "latlong",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Latlong\\Providers\\LatlongServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
